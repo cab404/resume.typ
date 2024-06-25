@@ -12,16 +12,25 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: determinatesystems/nix-installer-action@main
+
       - run: nix build . -o resume.pdf
+      # b is for boring
+      - run: nix build .#serious -o resume-b.pdf
+
       - uses: actions/upload-artifact@v4
         with:
           name: resume.pdf
           path: resume.pdf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: resume-b.pdf
+          path: resume-b.pdf
+
       - uses: ncipollo/release-action@v1
         if: ${{ github.ref == 'refs/heads/master' }}
         with:
           allowUpdates: true
-          artifacts: resume.pdf
+          artifacts: resume.pdf, resume-b.pdf
           makeLatest: true
           tag: "latest"
           omitBody: true
